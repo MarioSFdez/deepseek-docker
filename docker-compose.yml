@@ -1,0 +1,27 @@
+services:
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    restart: unless-stopped
+    depends_on:
+      - ollamadeepseek
+    ports:
+      - '8333:8080'
+    volumes:
+      - './openwebui_data:/app/backend/data'
+    environment:
+      OLLAMA_BASE_URL: 'http://127.0.0.1:11434'
+    networks:
+      - deepseek_network
+
+  ollamadeepseek:
+    build: .
+    restart: unless-stopped
+    ports:
+      - '11434:11434'
+    volumes:
+      - './deepseek_data:/root/.ollama'
+    networks:
+      - deepseek_network
+
+networks:
+  deepseek_network:
